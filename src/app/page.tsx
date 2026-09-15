@@ -1,69 +1,84 @@
+import { ArticleCard } from "@/components/article-card";
+import { Byline, DisplayHeading, Eyebrow } from "@/components/editorial-text";
+import { Frame } from "@/components/frame";
+import { articles, topicLabels } from "@/lib/content";
 import Image from "next/image";
-
+import Link from "next/link";
 export default function Home() {
+  const [lead, second, third, ...latest] = articles;
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <>
+      <section className="border-b border-ink/40 py-3 font-mono text-[0.68rem] leading-[1.5] font-semibold tracking-[0.035em]">
+        <Frame>
+          Portfolio concept. This issue contains original sample stories and
+          imagery.
+        </Frame>
+      </section>
+      <Frame
+        as="section"
+        className="grid items-end gap-[clamp(28px,6vw,96px)] py-12 pb-14 min-[641px]:grid-cols-[.86fr_1.14fr] min-[641px]:py-20 min-[641px]:pb-[72px]"
+      >
+        <div className="pb-3 [animation:lead-copy-in_.7s_var(--ease-editorial)_both]">
+          <Eyebrow>
+            {topicLabels[lead.topic]} / {lead.format}
+          </Eyebrow>
+          <DisplayHeading className="text-[clamp(2.75rem,12vw,3.125rem)] min-[641px]:text-[clamp(3.5rem,6.5vw,5.5rem)]">
+            <Link
+              className="transition-colors duration-200 ease-editorial hover:text-accent"
+              href={`/articles/${lead.slug}`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              {lead.title}
+            </Link>
+          </DisplayHeading>
+          <p className="mt-7 mb-[18px] max-w-[36rem] font-editorial text-[1.08rem] leading-[1.6] text-pretty">
+            {lead.deck}
           </p>
+          <Byline>By {lead.author.name}</Byline>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+        <Link
+          className="order-first relative block min-h-[380px] overflow-hidden rounded-editorial bg-surface shadow-[0_22px_50px_rgb(100_47_38_/_14%)] [animation:lead-mask-in_.9s_var(--ease-editorial)_both] min-[641px]:order-none min-[641px]:min-h-[440px] lg:min-h-[560px]"
+          href={`/articles/${lead.slug}`}
+        >
+          <Image
+            className="object-cover transition-[transform,filter] duration-[400ms] ease-editorial hover:scale-[1.025] hover:saturate-[1.04] hover:contrast-[1.02]"
+            src={lead.coverMedia}
+            alt={lead.altText}
+            fill
+            loading="eager"
+            sizes="(max-width: 640px) 100vw, 56vw"
+          />
+        </Link>
+      </Frame>
+      <Frame
+        as="section"
+        className="grid gap-10 pb-16 min-[641px]:grid-cols-2 min-[641px]:pb-24"
+      >
+        <ArticleCard article={second} />
+        <ArticleCard article={third} />
+      </Frame>
+      <Frame
+        as="section"
+        className="border-t border-ink/40 pt-8 pb-16 min-[641px]:pb-24"
+      >
+        <Eyebrow>Latest</Eyebrow>
+        <DisplayHeading
+          as="h2"
+          className="mb-10 text-[clamp(2.5rem,4vw,4.25rem)]"
+        >
+          More to linger with
+        </DisplayHeading>
+        <div className="grid gap-8 min-[641px]:grid-cols-2 lg:grid-cols-[1.35fr_.85fr_.85fr]">
+          {latest.map((a, index) => (
+            <ArticleCard
+              key={a.slug}
+              article={a}
+              className={
+                index === 0 ? "lg:row-span-2 lg:[&>a]:aspect-[3/4]" : ""
+              }
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          ))}
         </div>
-      </main>
-    </div>
+      </Frame>
+    </>
   );
 }
